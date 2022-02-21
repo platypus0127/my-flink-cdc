@@ -1,0 +1,76 @@
+-- 插入
+{
+    "before":null,
+    "after":{
+        "id":117,
+        "name":"user_110",
+        "address":"Shanghai",
+        "phone_number":"123567891234",
+        "email":"user_110@foo.com"
+    },
+    "source":{
+        "version":"1.5.4.Final",
+        "connector":"mysql",
+        "name":"mysql_binlog_source",
+        "ts_ms":1640583809000,
+        "snapshot":"false",
+        "db":"test_db_1",
+        "sequence":null,
+        "table":"user_1",
+        "server_id":1,
+        "gtid":null,
+        "file":"mysql-bin.000002",
+        "pos":21416506,
+        "row":0,
+        "thread":null,
+        "query":null
+    },
+    "op":"c",
+    "ts_ms":1640583807825,
+    "transaction":null
+}
+
+-- 更新
+--  更新
+ {"before":{"id":117,"name":"user_110","address":"Shanghai","phone_number":"123567891234","email":"user_110@foo.com"},"after":{"id":117,"name":"user_110","address":"shengz","phone_number":"123567891234","email":"user_110@foo.com"},"source":{"version":"1.5.4.Final","connector":"mysql","name":"mysql_binlog_source","ts_ms":1640585020000,"snapshot":"false","db":"test_db_1","sequence":null,"table":"user_1","server_id":1,"gtid":null,"file":"mysql-bin.000002","pos":21492330,"row":0,"thread":null,"query":null},"op":"u","ts_ms":1640585018678,"transaction":null}
+
+
+
+-- 建表语句
+ drop table user_1;
+ CREATE TABLE user_1 (
+   id int ,
+   name String,
+   address String,
+   phone_number String,
+   email String,
+   data_update_time String,
+   PRIMARY KEY (id)
+) PARTITION BY HASH PARTITIONS 16
+STORED AS KUDU
+
+
+====DDL语句 增加字段
+-- 含有变更表
+{"source":{"version":"1.5.4.Final","connector":"mysql","name":"mysql_binlog_source","ts_ms":1640938568774,"snapshot":"false","db":"test_db_1","sequence":null,"table":"user_1","server_id":1,"gtid":null,"file":"mysql-bin.000002","pos":47428013,"row":0,"thread":null,"query":null},"historyRecord":"{\"source\":{\"file\":\"mysql-bin.000002\",\"pos\":47428013,\"server_id\":1},\"position\":{\"transaction_id\":null,\"ts_sec\":1640938568,\"file\":\"mysql-bin.000002\",\"pos\":47428142,\"server_id\":1},\"databaseName\":\"test_db_1\",\"ddl\":\"DROP TABLE `test_db_1`.`user_1`\",\"tableChanges\":[]}"}
+-- 不含变更表（这个表是在navcate中创建的）
+{
+    "source":{
+        "version":"1.5.4.Final",
+        "connector":"mysql",
+        "name":"mysql_binlog_source",
+        "ts_ms":1643268407246,
+        "snapshot":"false",
+        "db":"test_db_1",
+        "sequence":null,
+        "table":"",
+        "server_id":1,
+        "gtid":null,
+        "file":"mysql-bin.000003",
+        "pos":20198313,
+        "row":0,
+        "thread":null,
+        "query":null
+    },
+    "historyRecord":"{\"source\":{\"file\":\"mysql-bin.000003\",\"pos\":20198313,\"server_id\":1},\"position\":{\"transaction_id\":null,\"ts_sec\":1643268407,\"file\":\"mysql-bin.000003\",\"pos\":20198462,\"server_id\":1},\"databaseName\":\"test_db_1\",\"ddl\":\"ALTER TABLE `user_2`\\r\\nADD COLUMN `xx3`  int(100) NULL AFTER `xx2`\",\"tableChanges\":[]}"
+}
